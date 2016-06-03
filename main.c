@@ -62,10 +62,6 @@ void l_draw_line(float x1, float y1, float z1, float x2, float y2, float z2)
 void l_fill_rect(int x, int y, int width, int height, char r, char g, char b) 
 {
     glWindowPos2i(x, SCREEN_HEIGHT - y - height);
-    GLboolean valid;
-    glGetBooleanv(GL_CURRENT_RASTER_POSITION_VALID, &valid);
-    if(valid == GL_FALSE) 
-        printf("Error\n");
     char buf[width*height*3];
     for(int i = 0; i < width*height; i++) {
         buf[i*3] = r;
@@ -145,7 +141,7 @@ void glut_click(int button, int state, int x, int y)
 
 void glut_hover(int x, int y)
 {
-    printf("(%d, %d)\n", x, y);
+
 }
 
 void glut_drag(int x, int y)
