@@ -2,8 +2,8 @@ C_FILES=$(wildcard *.c)
 O_FILES=$(C_FILES:%.c=%.o)
 EXECUTABLE=a.out
 
-CFLAGS=-Wno-deprecated-declarations
-LDFLAGS=
+CFLAGS=-Wno-deprecated-declarations -I/usr/local/include/luajit-2.0
+LDFLAGS=-lluajit -L/usr/local/lib
 
 .PHONY: all clean
 
