@@ -199,6 +199,13 @@ int main(int argc, char *argv[])
 
     L = luaL_newstate();
     luaL_openlibs(L);
+
+    lua_pushnumber(L, SCREEN_WIDTH);
+    lua_setglobal(L, "SCREEN_WIDTH");
+
+    lua_pushnumber(L, SCREEN_HEIGHT);
+    lua_setglobal(L, "SCREEN_HEIGHT");
+
     luaL_dofile(L, "ui.lua");
 
     lua_getglobal(L, "display");
