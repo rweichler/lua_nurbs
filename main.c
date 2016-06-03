@@ -74,60 +74,6 @@ void l_fill_rect(int x, int y, int width, int height, char r, char g, char b)
     glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, buf);
 }
 
-float pos[3];
-void move(float p[3])
-{
-    pos[0] = p[0];
-    pos[1] = p[1];
-    pos[2] = p[2];
-}
-
-void move_and_draw(float p[3])
-{
-    draw_line(pos, p);
-    move(p);
-}
-
-#define MOVE(x, y, z) do {\
-    p[0] = x; p[1] = y; p[2] = z;\
-    move(p);\
-} while(0)
-
-#define DRAW(x, y, z) do {\
-    p[0] = x; p[1] = y; p[2] = z;\
-    move_and_draw(p);\
-} while(0)
-
-void draw_linez()
-{
-    const float s = 10;
-
-    float p[3];
-
-    MOVE(0, 0, 0);
-    glColor3f(1.0, 0.0, 0.0);
-    DRAW(0, 0, s);
-    DRAW(s, 0, s);
-    DRAW(s, 0, 0);
-    DRAW(0, 0, 0);
-
-    MOVE(0, s, 0);
-    glColor3f(0, 1, 0);
-    DRAW(0, s, s);
-    DRAW(s, s, s);
-    DRAW(s, s, 0);
-    DRAW(0, s, 0);
-
-    glColor3f(0, 0, 1);
-    DRAW(0, 0, 0);
-    MOVE(0, 0, s);
-    DRAW(0, s, s);
-    MOVE(s, 0, s);
-    DRAW(s, s, s);
-    MOVE(s, 0, 0);
-    DRAW(s, s, 0);
-}
-
 void glut_display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -136,8 +82,6 @@ void glut_display()
     glDrawPixels(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, black_buffer);
 
     gluPerspective(45.0f,SCREEN_WIDTH/SCREEN_HEIGHT, 0.5f, 300000.0f);
-
-    draw_linez();
 
     lua_rawgeti(L, LUA_REGISTRYINDEX, lua_display);
     lua_call(L, 0, 0);
@@ -167,7 +111,6 @@ void glut_drag(int x, int y)
     lua_pushnumber(L, y);
     lua_call(L, 2, 0);
 }
-
 
 void glut_keyboard(unsigned char key, int x, int y)
 {
