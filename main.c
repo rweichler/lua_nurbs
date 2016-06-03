@@ -19,6 +19,14 @@ void draw_line(float p1[3], float p2[3])
         p[1][i] = p2[i] - camera[i];
     }
 
+    float a = rotation[0];
+    for(int i = 0; i < 2; i++) {
+        float x = p[i][0];
+        float y = p[i][2];
+        p[i][0] = x*cosf(a) - y*sinf(a);
+        p[i][2] = x*sinf(a) + y*cosf(a);
+    }
+
     glLineWidth(1);
     glBegin(GL_LINES);
     for(int i = 0; i < 2; i++) {
@@ -136,7 +144,7 @@ void glut_keyboard(unsigned char key, int x, int y)
     glut_display();
 }
 
-#define ROTATION_DELTA 0.2
+#define ROTATION_DELTA M_PI/24
 
 void glut_special_keyboard(int key, int x, int y)
 {
@@ -148,10 +156,10 @@ void glut_special_keyboard(int key, int x, int y)
         rotation[1] -= ROTATION_DELTA;
     break;
     case GLUT_KEY_LEFT:
-        rotation[0] += ROTATION_DELTA;
+        rotation[0] -= ROTATION_DELTA;
     break;
     case GLUT_KEY_RIGHT:
-        rotation[0] -= ROTATION_DELTA;
+        rotation[0] += ROTATION_DELTA;
     break;
     default:
     return;
