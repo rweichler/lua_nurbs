@@ -148,7 +148,6 @@ void glut_keyboard(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
-
 void glut_special_keyboard(int key, int x, int y)
 {
     switch(key) {

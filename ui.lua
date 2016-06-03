@@ -12,7 +12,6 @@ local FILL_RECT = ffi.C.l_fill_rect
 local DRAW_LINE = ffi.C.l_draw_line
 local REDISPLAY = ffi.C.glutPostRedisplay
 
-local s = 10
 
 local function drawer(x, y, z)
     x = x or 0
@@ -33,6 +32,8 @@ end
 
 function display()
     local MOVE, DRAW = drawer()
+
+    local s = 10
 
     MOVE(0, 0, 0)
     SET_COLOR(1.0, 0.0, 0.0)
