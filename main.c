@@ -15,14 +15,14 @@ void draw_line(float p1[3], float p2[3])
 {
     float p[2][3];
     for(int i = 0; i < 3; i++) {
-        p[0][i] = p1[i];
-        p[1][i] = p2[i];
+        p[0][i] = p1[i] - camera[i];
+        p[1][i] = p2[i] - camera[i];
     }
 
     glLineWidth(1);
     glBegin(GL_LINES);
     for(int i = 0; i < 2; i++) {
-        glVertex3f(p[i][0] - camera[0], p[i][1] - camera[1], p[i][2] - camera[2]);
+        glVertex3f(p[i][0], p[i][1], -p[i][2]);
     }
     glEnd();
 }
@@ -109,13 +109,13 @@ void glut_keyboard(unsigned char key, int x, int y)
 {
     switch(key) {
     case 'w':
-        camera[2] -= DELTA;
+        camera[2] += DELTA;
     break;
     case 'a':
         camera[0] -= DELTA;
     break;
     case 's':
-        camera[2] += DELTA;
+        camera[2] -= DELTA;
     break;
     case 'd':
         camera[0] += DELTA;
