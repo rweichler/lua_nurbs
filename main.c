@@ -15,7 +15,6 @@ char buffer[SCREEN_WIDTH*SCREEN_HEIGHT*4];
 char black_buffer[SCREEN_WIDTH*SCREEN_HEIGHT*3];
 
 float camera[3] = {DELTA*5, DELTA*5, -DELTA*20};
-//float camera[3] = {0, 0, 0};
 float rotation[2] = {0, 0};
 
 lua_State *L;

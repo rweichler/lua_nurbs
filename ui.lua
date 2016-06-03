@@ -1,7 +1,7 @@
 local ffi = require 'ffi'
 local bit = require 'bit'
 VIEW = require 'lua.view'
-BUTTON = require 'lua.button'
+TOGGLE = require 'lua.toggle'
 
 ffi.cdef[[
 void glColor3f(float, float, float);
@@ -20,13 +20,11 @@ local window = VIEW()
 window.width = SCREEN_WIDTH
 window.height = SCREEN_HEIGHT
 
-local yellow = BUTTON()
+local yellow = TOGGLE:new()
 yellow.x = 20
 yellow.y = 20
 yellow.width = 60
 yellow.height = 60
-yellow.color = {255, 255, 0}
-yellow.pressed_color = {100, 100, 0}
 
 window:add_subview(yellow)
 

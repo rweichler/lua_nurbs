@@ -9,9 +9,6 @@ end
 
 function BUTTON:set_width(width)
     self._width = width
-    if self.label then
-        self.label.width = width
-    end
 end
 
 function BUTTON:get_width()
@@ -20,9 +17,6 @@ end
 
 function BUTTON:set_height(height)
     self._height = height
-    if self.label then
-        self.label.height = height
-    end
 end
 
 function BUTTON:get_height()
@@ -34,6 +28,7 @@ function BUTTON:set_color(color)
         self.background_color = color
     end
     self._color = color
+    self.pressed_color = {color[1]/2, color[2]/2, color[3]/2}
 end
 function BUTTON:get_color()
     return self._color
