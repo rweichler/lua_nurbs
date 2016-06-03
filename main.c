@@ -115,18 +115,23 @@ void glut_drag(int x, int y)
 
 void glut_keyboard(unsigned char key, int x, int y)
 {
+    float a = rotation[0];
     switch(key) {
     case 'w':
-        camera[2] += DELTA;
+        camera[2] += cosf(a)*DELTA;
+        camera[0] += sinf(a)*DELTA;
     break;
     case 'a':
-        camera[0] -= DELTA;
+        camera[0] -= cosf(a)*DELTA;
+        camera[2] += sinf(a)*DELTA;
     break;
     case 's':
-        camera[2] -= DELTA;
+        camera[2] -= cosf(a)*DELTA;
+        camera[0] -= sinf(a)*DELTA;
     break;
     case 'd':
-        camera[0] += DELTA;
+        camera[0] += cosf(a)*DELTA;
+        camera[2] -= sinf(a)*DELTA;
     break;
     case 'r':
         camera[1] += DELTA;
