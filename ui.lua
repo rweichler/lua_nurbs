@@ -31,32 +31,32 @@ end
 
 
 function display()
-    local MOVE, DRAW = drawer()
+    local move, draw = drawer()
 
     local s = 10
 
-    MOVE(0, 0, 0)
+    move(0, 0, 0)
     SET_COLOR(1.0, 0.0, 0.0)
-    DRAW(0, 0, s)
-    DRAW(s, 0, s)
-    DRAW(s, 0, 0)
-    DRAW(0, 0, 0)
+    draw(0, 0, s)
+    draw(s, 0, s)
+    draw(s, 0, 0)
+    draw(0, 0, 0)
 
-    MOVE(0, s, 0)
+    move(0, s, 0)
     SET_COLOR(0, 1, 0)
-    DRAW(0, s, s)
-    DRAW(s, s, s)
-    DRAW(s, s, 0)
-    DRAW(0, s, 0) 
+    draw(0, s, s)
+    draw(s, s, s)
+    draw(s, s, 0)
+    draw(0, s, 0) 
 
     SET_COLOR(0, 0, 1)
-    DRAW(0, 0, 0)
-    MOVE(0, 0, s)
-    DRAW(0, s, s)
-    MOVE(s, 0, s)
-    DRAW(s, s, s)
-    MOVE(s, 0, 0)
-    DRAW(s, s, 0)
+    draw(0, 0, 0)
+    move(0, 0, s)
+    draw(0, s, s)
+    move(s, 0, s)
+    draw(s, s, s)
+    move(s, 0, 0)
+    draw(s, s, 0)
 
     FILL_RECT(20, 20, 60, 60, 255, 255, 0)
 end
