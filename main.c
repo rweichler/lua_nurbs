@@ -2,7 +2,7 @@
 #include <OpenGL/gl.h>
 #include <string.h>
 #include <math.h>
-#include <lua.h>
+#include <luajit.h>
 #include <lauxlib.h>
 #include <lualib.h>
 
@@ -17,6 +17,9 @@ char black_buffer[SCREEN_WIDTH*SCREEN_HEIGHT*3];
 float camera[3] = {DELTA*5, DELTA*5, -DELTA*20};
 //float camera[3] = {0, 0, 0};
 float rotation[2] = {0, 0};
+
+lua_State *L;
+int lua_display, lua_drag, lua_click;
 
 
 void draw_line(float p1[3], float p2[3])
@@ -95,14 +98,8 @@ void move_and_draw(float p[3])
     move_and_draw(p);\
 } while(0)
 
-void glut_display()
+void draw_linez()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glLoadIdentity();
-
-    glDrawPixels(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, black_buffer);
-
-    gluPerspective(45.0f,SCREEN_WIDTH/SCREEN_HEIGHT, 0.5f, 300000.0f);
     const float s = 10;
 
     float p[3];
@@ -129,14 +126,33 @@ void glut_display()
     DRAW(s, s, s);
     MOVE(s, 0, 0);
     DRAW(s, s, 0);
+}
 
-    l_fill_rect(20, 20, 60, 60, 255, 255, 0);
+void glut_display()
+{
+    glClear(GL_COLOR_BUFFER_BIT);
+    glLoadIdentity();
+
+    glDrawPixels(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, black_buffer);
+
+    gluPerspective(45.0f,SCREEN_WIDTH/SCREEN_HEIGHT, 0.5f, 300000.0f);
+
+    draw_linez();
+
+    lua_rawgeti(L, LUA_REGISTRYINDEX, lua_display);
+    lua_call(L, 0, 0);
 
     glutSwapBuffers();
 }
 
 void glut_click(int button, int state, int x, int y)
 {
+    lua_rawgeti(L, LUA_REGISTRYINDEX, lua_click);
+    lua_pushnumber(L, button);
+    lua_pushnumber(L, state);
+    lua_pushnumber(L, x);
+    lua_pushnumber(L, y);
+    lua_call(L, 4, 0);
 }
 
 void glut_hover(int x, int y)
@@ -146,7 +162,10 @@ void glut_hover(int x, int y)
 
 void glut_drag(int x, int y)
 {
-
+    lua_rawgeti(L, LUA_REGISTRYINDEX, lua_drag);
+    lua_pushnumber(L, x);
+    lua_pushnumber(L, y);
+    lua_call(L, 2, 0);
 }
 
 
@@ -235,6 +254,19 @@ int main(int argc, char *argv[])
     glutPassiveMotionFunc(glut_hover);
     glutKeyboardFunc(glut_keyboard);
     glutSpecialFunc(glut_special_keyboard);
+
+    L = luaL_newstate();
+    luaL_openlibs(L);
+    luaL_dofile(L, "ui.lua");
+
+    lua_getglobal(L, "display");
+    lua_display = luaL_ref(L, LUA_REGISTRYINDEX);
+
+    lua_getglobal(L, "drag");
+    lua_drag = luaL_ref(L, LUA_REGISTRYINDEX);
+
+    lua_getglobal(L, "click");
+    lua_click = luaL_ref(L, LUA_REGISTRYINDEX);
 
     glutMainLoop();
 
