@@ -26,7 +26,7 @@ Click the button in the top left corner of the screen.
 
 This is on by default. Square should be green.
 
-So, the camera basically behaves like an Doom. Use `wasd` to move, use the arrow keys to look around.
+So, the camera basically behaves like Doom. Use `wasd` to move, use the arrow keys to look around.
 
 Press `r` to move up, and `f` to move down.
 
