@@ -1,6 +1,6 @@
 # Lua NURBS
 
-## Compiling / Running
+## Setup
 
 ### Prerequisites
 
@@ -15,6 +15,8 @@
 ### Running
 
 `./a.out`
+
+## How to use the program
 
 ### Cycling through the modes
 
