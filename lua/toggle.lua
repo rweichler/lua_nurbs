@@ -46,6 +46,10 @@ end
 function TOGGLE:pressed()
     BUTTON.pressed(self)
     self.on = not self.on
+    self:toggled()
+end
+
+function TOGGLE:toggled()
 end
 
 return TOGGLE 

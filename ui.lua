@@ -2,6 +2,8 @@ local ffi = require 'ffi'
 local bit = require 'bit'
 VIEW = require 'lua.view'
 TOGGLE = require 'lua.toggle'
+POINT_VIEW = require 'lua.view.point'
+GRID = require 'lua.view.point_grid'
 
 ffi.cdef[[
 void glColor3f(float, float, float);
@@ -13,8 +15,15 @@ float *l_rotation();
 int glutGetModifiers();
 ]]
 
+DELTA = 1
+ROTATION_DELTA = math.pi/24
+
 CAMERA = ffi.C.l_camera()
 ROTATION = ffi.C.l_rotation()
+
+CAMERA[0] = DELTA*5
+CAMERA[1] = DELTA*5
+CAMERA[2] = -DELTA*20
 
 SET_COLOR = ffi.C.glColor3f
 FILL_RECT = ffi.C.l_fill_rect
@@ -25,29 +34,26 @@ local window = VIEW()
 window.width = SCREEN_WIDTH
 window.height = SCREEN_HEIGHT
 
-local yellow = TOGGLE:new()
-yellow.x = 20
-yellow.y = 20
-yellow.width = 60
-yellow.height = 60
+local grid = GRID(2, 2)
+window:add_subview(grid)
 
-window:add_subview(yellow)
-
-local function drawer(x, y, z)
-    x = x or 0
-    y = y or 0
-    z = z or 0
-    local move = function(xx, yy, zz)
-        x = xx
-        y = yy
-        z = zz
+local toggle = TOGGLE:new()
+toggle.x = 20
+toggle.y = 20
+toggle.width = 60
+toggle.height = 60
+toggle.toggled = function(self)
+    if self.on then
+        grid.active = true
+    else
+        grid.active = false
     end
-    local draw = function(xx, yy, zz)
-        DRAW_LINE(x, y, z, xx, yy, zz)
-        move(xx, yy, zz)
-    end
-    return move, draw
+    REDISPLAY()
 end
+window:add_subview(toggle)
+
+local drawer = require 'func.drawer'
+
 
 
 function display()
@@ -100,47 +106,18 @@ function drag(x, y)
     end
 end
 
-local keyfuncs = {}
-local DELTA = 1
-local sinf = math.sin
-local cosf = math.cos
-keyfuncs.w = function()
-    local a = ROTATION[0]
-    CAMERA[2] = CAMERA[2] +  cosf(a)*DELTA
-    CAMERA[0] = CAMERA[0] + sinf(a)*DELTA
-end
-keyfuncs.a = function()
-    local a = ROTATION[0]
-    CAMERA[0] = CAMERA[0] - cosf(a)*DELTA
-    CAMERA[2] = CAMERA[2] + sinf(a)*DELTA
-end
-keyfuncs.s = function()
-    local a = ROTATION[0]
-    CAMERA[2] = CAMERA[2] - cosf(a)*DELTA
-    CAMERA[0] = CAMERA[0] - sinf(a)*DELTA
-end
-keyfuncs.d = function()
-    local a = ROTATION[0]
-    CAMERA[0] = CAMERA[0] + cosf(a)*DELTA
-    CAMERA[2] = CAMERA[2] - sinf(a)*DELTA
-end
-keyfuncs.r = function()
-    local a = ROTATION[0]
-    CAMERA[1] = CAMERA[1] + DELTA
-end
-keyfuncs.f = function()
-    local a = ROTATION[0]
-    CAMERA[1] = CAMERA[1] - DELTA
-end
-keyfuncs[' '] = function()
-    ROTATION[0] = 0
-    ROTATION[1] = 0
-end
-
+local camera_keyfuncs = require 'func.camera_keys'
+local point_keyfuncs = require 'func.point_keys'
 function keypress(key)
-    local func = keyfuncs[key]
+    local func
+    if toggle.on then
+        func = point_keyfuncs[key]
+    else
+        func = camera_keyfuncs[key]
+    end
     if func then
-        func()
+        func(grid.selected_point)
+        print('yee')
         REDISPLAY()
     end
 end

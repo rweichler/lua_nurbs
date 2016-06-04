@@ -7,15 +7,13 @@
 #include <lualib.h>
 #include <stdlib.h>
 
-#define DELTA 1
-#define ROTATION_DELTA M_PI/24
 const unsigned int SCREEN_WIDTH = 800;
 const unsigned int SCREEN_HEIGHT = 600;
 
 char buffer[SCREEN_WIDTH*SCREEN_HEIGHT*4];
 char black_buffer[SCREEN_WIDTH*SCREEN_HEIGHT*3];
 
-float camera[3] = {DELTA*5, DELTA*5, -DELTA*20};
+float camera[3] = {0, 0, 0};
 float rotation[2] = {0, 0};
 
 lua_State *L;
@@ -137,36 +135,31 @@ void glut_keyboard(unsigned char key, int x, int y)
     luacall(1, 0);
 }
 
+#define MAP(GLUT, STR) \
+    case GLUT:\
+    str = STR;\
+    break
+
 void glut_special_keyboard(int key, int x, int y)
 {
+    lua_rawgeti(L, LUA_REGISTRYINDEX, lua_keypress);
+    const char *str = NULL;
     switch(key) {
-    case GLUT_KEY_UP:
-        rotation[1] += ROTATION_DELTA;
-    break;
-    case GLUT_KEY_DOWN:
-        rotation[1] -= ROTATION_DELTA;
-    break;
-    case GLUT_KEY_LEFT:
-        rotation[0] -= ROTATION_DELTA;
-    break;
-    case GLUT_KEY_RIGHT:
-        rotation[0] += ROTATION_DELTA;
-    break;
-    default:
-    return;
+        MAP(GLUT_KEY_UP, "up");
+        MAP(GLUT_KEY_DOWN, "down");
+        MAP(GLUT_KEY_LEFT, "left");
+        MAP(GLUT_KEY_RIGHT, "right");
     }
-    if(rotation[1] > M_PI/2) {
-        rotation[1] = M_PI/2;
-    } else if(rotation[1] < -M_PI/2) {
-        rotation[1] = -M_PI/2;
+
+    if(str == NULL) {
+        //send the ugly raw key int
+        lua_pushnumber(L, key);
+        luacall(1, 0);
+    } else {
+        //send the nice pretty string
+        lua_pushstring(L, str);
+        luacall(1, 0);
     }
-    while(rotation[0] > 2*M_PI) {
-        rotation[0] -= 2*M_PI;
-    }
-    while(rotation[0] < -2*M_PI) {
-        rotation[0] += 2*M_PI;
-    }
-    glutPostRedisplay();
 }
 
 int main(int argc, char *argv[])
@@ -196,6 +189,10 @@ int main(int argc, char *argv[])
     lua_setglobal(L, "SCREEN_HEIGHT");
 
     luaL_loadfile(L, "ui.lua");
+    if(lua_isstring(L, -1)) {
+        printf("%s\n", lua_tostring(L, -1));
+        return 1;
+    }
     luacall(0, 0);
 
     lua_getglobal(L, "display");
