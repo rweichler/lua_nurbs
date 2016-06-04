@@ -6,9 +6,10 @@ local GRAPH = VIEW()
 GRAPH.color = {255, 255, 255}
 
 function GRAPH:coords()
+    local s = 10
     return function(t)
-        t = t*20
-        return math.sqrt(t)*20, t, 0
+        t = t*s
+        return math.sqrt(t)/s*10, t, 0
     end
 end
 

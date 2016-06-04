@@ -1,4 +1,4 @@
-local ffi = require 'ffi'
+ffi = require 'ffi'
 local bit = require 'bit'
 
 DELTA = 1
@@ -9,6 +9,7 @@ TOGGLE = require 'lua.toggle'
 POINT_VIEW = require 'lua.view.point'
 GRID = require 'lua.view.point_grid'
 GRAPH = require 'lua.graph'
+NURBS = require 'lua.nurbs'
 
 ffi.cdef[[
 void glColor3f(float, float, float);
@@ -19,6 +20,33 @@ void l_draw_text(const char *str, int x, int y);
 float *l_camera();
 float *l_rotation();
 int glutGetModifiers();
+typedef struct
+{
+    size_t deg;
+    size_t order;
+    size_t dim;
+    size_t n_ctrlp;
+    size_t n_knots;
+    float* ctrlp;
+    float* knots;
+} tsBSpline;
+typedef struct
+{
+    float u;
+    size_t k;
+    size_t s;
+    size_t h;
+    size_t dim;
+    size_t n_points;
+    float* points;
+    float* result;
+} tsDeBoorNet;
+int ts_bspline_new(
+    const size_t deg, const size_t dim,
+    const size_t n_ctrlp, int type,
+    tsBSpline* bspline
+);
+void ts_bspline_free(tsBSpline* bspline);
 ]]
 
 
