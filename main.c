@@ -5,6 +5,7 @@
 #include <luajit.h>
 #include <lauxlib.h>
 #include <lualib.h>
+#include <stdlib.h>
 
 #define DELTA 1
 #define ROTATION_DELTA M_PI/24
@@ -18,8 +19,25 @@ float camera[3] = {DELTA*5, DELTA*5, -DELTA*20};
 float rotation[2] = {0, 0};
 
 lua_State *L;
-int lua_display, lua_drag, lua_click;
+int lua_display, lua_drag, lua_click, lua_keypress;
 
+float *l_camera()
+{
+    return camera;
+}
+
+float *l_rotation()
+{
+    return rotation;
+}
+
+void luacall(int args, int ret)
+{
+    if(lua_pcall(L, args, ret, 0) != 0) {
+        printf("%s\n", lua_tostring(L, -1));
+        exit(1);
+    }
+}
 
 void draw_line(float p1[3], float p2[3])
 {
@@ -83,7 +101,7 @@ void glut_display()
     gluPerspective(45.0f,SCREEN_WIDTH/SCREEN_HEIGHT, 0.5f, 300000.0f);
 
     lua_rawgeti(L, LUA_REGISTRYINDEX, lua_display);
-    lua_call(L, 0, 0);
+    luacall(0, 0);
 
     glutSwapBuffers();
 }
@@ -95,7 +113,7 @@ void glut_click(int button, int state, int x, int y)
     lua_pushnumber(L, state);
     lua_pushnumber(L, x);
     lua_pushnumber(L, y);
-    lua_call(L, 4, 0);
+    luacall(4, 0);
 }
 
 void glut_hover(int x, int y)
@@ -108,43 +126,15 @@ void glut_drag(int x, int y)
     lua_rawgeti(L, LUA_REGISTRYINDEX, lua_drag);
     lua_pushnumber(L, x);
     lua_pushnumber(L, y);
-    lua_call(L, 2, 0);
+    luacall(2, 0);
 }
 
 void glut_keyboard(unsigned char key, int x, int y)
 {
-    float a = rotation[0];
-    switch(key) {
-    case 'w':
-        camera[2] += cosf(a)*DELTA;
-        camera[0] += sinf(a)*DELTA;
-    break;
-    case 'a':
-        camera[0] -= cosf(a)*DELTA;
-        camera[2] += sinf(a)*DELTA;
-    break;
-    case 's':
-        camera[2] -= cosf(a)*DELTA;
-        camera[0] -= sinf(a)*DELTA;
-    break;
-    case 'd':
-        camera[0] += cosf(a)*DELTA;
-        camera[2] -= sinf(a)*DELTA;
-    break;
-    case 'r':
-        camera[1] += DELTA;
-    break;
-    case 'f':
-        camera[1] -= DELTA;
-    break;
-    case ' ':
-        rotation[0] = 0;
-        rotation[1] = 0;
-    break;
-    default:
-    return;
-    }
-    glutPostRedisplay();
+    lua_rawgeti(L, LUA_REGISTRYINDEX, lua_keypress);
+    char str[2] = {key, '\0'};
+    lua_pushstring(L, str);
+    luacall(1, 0);
 }
 
 void glut_special_keyboard(int key, int x, int y)
@@ -205,7 +195,8 @@ int main(int argc, char *argv[])
     lua_pushnumber(L, SCREEN_HEIGHT);
     lua_setglobal(L, "SCREEN_HEIGHT");
 
-    luaL_dofile(L, "ui.lua");
+    luaL_loadfile(L, "ui.lua");
+    luacall(0, 0);
 
     lua_getglobal(L, "display");
     lua_display = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -215,6 +206,9 @@ int main(int argc, char *argv[])
 
     lua_getglobal(L, "click");
     lua_click = luaL_ref(L, LUA_REGISTRYINDEX);
+
+    lua_getglobal(L, "keypress");
+    lua_keypress = luaL_ref(L, LUA_REGISTRYINDEX);
 
     glutMainLoop();
 
