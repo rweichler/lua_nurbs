@@ -89,6 +89,16 @@ void l_fill_rect(int x, int y, int width, int height, char r, char g, char b)
     glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, buf);
 }
 
+void l_draw_text(const char *str, int x, int y)
+{
+    glWindowPos2i(0, 0);
+    glRasterPos2f(0.5, 0.5);
+    for(int i = 0; i < strlen(str); i++) {
+        glutBitmapCharacter(GLUT_BITMAP_9_BY_15, str[i]);
+    }
+    //glRasterPos2f(0, 0);
+}
+
 void glut_display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
@@ -96,12 +106,14 @@ void glut_display()
 
     glDrawPixels(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, black_buffer);
 
-    gluPerspective(45.0f,SCREEN_WIDTH/SCREEN_HEIGHT, 0.5f, 300000.0f);
+    gluPerspective(45.0f, SCREEN_WIDTH/SCREEN_HEIGHT, 0.5f, 300000.0f);
 
     lua_rawgeti(L, LUA_REGISTRYINDEX, lua_display);
     luacall(0, 0);
 
     glutSwapBuffers();
+
+    l_draw_text("FUCK YOU", 0, 0);
 }
 
 void glut_click(int button, int state, int x, int y)

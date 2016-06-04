@@ -24,11 +24,11 @@ function BUTTON:get_height()
 end
 
 function BUTTON:set_color(color)
-    if not self.background_color then
-        self.background_color = color
-    end
     self._color = color
     self.pressed_color = {color[1]/2, color[2]/2, color[3]/2}
+    if not (self.leftmdown and self.pressed_color) then
+        self.background_color = color
+    end
 end
 function BUTTON:get_color()
     return self._color

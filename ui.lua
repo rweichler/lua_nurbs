@@ -1,22 +1,26 @@
 local ffi = require 'ffi'
 local bit = require 'bit'
+
+DELTA = 1
+ROTATION_DELTA = math.pi/24
+
 VIEW = require 'lua.view'
 TOGGLE = require 'lua.toggle'
 POINT_VIEW = require 'lua.view.point'
 GRID = require 'lua.view.point_grid'
+GRAPH = require 'lua.graph'
 
 ffi.cdef[[
 void glColor3f(float, float, float);
 void l_fill_rect(int x, int y, int width, int height, char r, char g, char b);
 void l_draw_line(float x1, float y1, float z1, float x2, float y2, float z2);
 void glutPostRedisplay();
+void l_draw_text(const char *str, int x, int y);
 float *l_camera();
 float *l_rotation();
 int glutGetModifiers();
 ]]
 
-DELTA = 1
-ROTATION_DELTA = math.pi/24
 
 CAMERA = ffi.C.l_camera()
 ROTATION = ffi.C.l_rotation()
@@ -29,19 +33,23 @@ SET_COLOR = ffi.C.glColor3f
 FILL_RECT = ffi.C.l_fill_rect
 DRAW_LINE = ffi.C.l_draw_line
 REDISPLAY = ffi.C.glutPostRedisplay
+DRAW_TEXT = ffi.C.l_draw_text
 
 local window = VIEW()
 window.width = SCREEN_WIDTH
 window.height = SCREEN_HEIGHT
 
-local grid = GRID(2, 2)
+local grid = GRID(6, 6)
 window:add_subview(grid)
 
-local toggle = TOGGLE:new()
+local toggle = TOGGLE()
 toggle.x = 20
 toggle.y = 20
 toggle.width = 60
 toggle.height = 60
+toggle.on_color = {100, 100, 100}
+toggle.off_color = {0, 255, 0}
+toggle.color = toggle.off_color
 toggle.toggled = function(self)
     if self.on then
         grid.active = true
@@ -52,6 +60,9 @@ toggle.toggled = function(self)
 end
 window:add_subview(toggle)
 
+local graph = GRAPH()
+window:add_subview(graph)
+
 local drawer = require 'func.drawer'
 
 
@@ -61,6 +72,7 @@ function display()
 
     local s = 10
 
+    DRAW_TEXT("lmfao", 20, 20);
     move(0, 0, 0)
     SET_COLOR(1.0, 0.0, 0.0)
     draw(0, 0, s)
@@ -84,7 +96,10 @@ function display()
     move(s, 0, 0)
     draw(s, s, 0)
 
+    DRAW_TEXT("lmfao", 20, 20);
+
     window:render()
+    DRAW_TEXT("lmfao", 20, 20);
 end
 
 function click(button, state, x, y)
@@ -107,17 +122,16 @@ function drag(x, y)
 end
 
 local camera_keyfuncs = require 'func.camera_keys'
-local point_keyfuncs = require 'func.point_keys'
 function keypress(key)
-    local func
     if toggle.on then
-        func = point_keyfuncs[key]
+        if grid:keypress(key) then
+            REDISPLAY()
+        end
     else
-        func = camera_keyfuncs[key]
-    end
-    if func then
-        func(grid.selected_point)
-        print('yee')
-        REDISPLAY()
+        local func = camera_keyfuncs[key]
+        if func then
+            func(grid.selected_point)
+            REDISPLAY()
+        end
     end
 end

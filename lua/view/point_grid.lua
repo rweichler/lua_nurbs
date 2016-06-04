@@ -65,4 +65,57 @@ function GRID:set_selected(x, y)
     end
 end
 
+local pt_keyfuncs = require 'func.point_keys'
+
+local keyfuncs = {}
+keyfuncs.up = function(self)
+    local x = self.selected_x
+    local y = self.selected_y
+    y = y + 1
+    if y > #self.points[x] then
+        y = 1
+    end
+    self:set_selected(x, y)
+end
+keyfuncs.down = function(self)
+    local x = self.selected_x
+    local y = self.selected_y
+    y = y - 1
+    if y < 1 then
+        y = #self.points[x] 
+    end
+    self:set_selected(x, y)
+end
+keyfuncs.left = function(self)
+    local x = self.selected_x
+    local y = self.selected_y
+    x = x - 1
+    if x < 1 then
+        x = #self.points 
+    end
+    self:set_selected(x, y)
+end
+keyfuncs.right = function(self)
+    local x = self.selected_x
+    local y = self.selected_y
+    x = x + 1
+    if x > #self.points then
+        x = 1
+    end
+    self:set_selected(x, y)
+end
+
+function GRID:keypress(key)
+    local f = pt_keyfuncs[key]
+    if f then
+        f(self.selected_point)
+        return true
+    end
+    local f = keyfuncs[key]
+    if f then
+        f(self)
+        return true
+    end
+end
+
 return GRID
