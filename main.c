@@ -7,8 +7,8 @@
 #include <lualib.h>
 #include <stdlib.h>
 
-const unsigned int SCREEN_WIDTH = 800;
-const unsigned int SCREEN_HEIGHT = 600;
+const unsigned int SCREEN_WIDTH = 1280;
+const unsigned int SCREEN_HEIGHT = 800;
 
 char buffer[SCREEN_WIDTH*SCREEN_HEIGHT*4];
 char black_buffer[SCREEN_WIDTH*SCREEN_HEIGHT*3];
@@ -106,7 +106,7 @@ void glut_display()
 
     glDrawPixels(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, black_buffer);
 
-    gluPerspective(45.0f, SCREEN_WIDTH/SCREEN_HEIGHT, 0.5f, 300000.0f);
+    gluPerspective(45.0f, SCREEN_WIDTH*1.0/SCREEN_HEIGHT, 0.5f, 300000.0f);
 
     lua_rawgeti(L, LUA_REGISTRYINDEX, lua_display);
     luacall(0, 0);
@@ -128,7 +128,6 @@ void glut_click(int button, int state, int x, int y)
 
 void glut_hover(int x, int y)
 {
-
 }
 
 void glut_drag(int x, int y)
@@ -219,6 +218,7 @@ int main(int argc, char *argv[])
     lua_getglobal(L, "keypress");
     lua_keypress = luaL_ref(L, LUA_REGISTRYINDEX);
 
+    glutFullScreen();
     glutMainLoop();
 
     return 0;

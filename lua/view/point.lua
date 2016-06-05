@@ -10,6 +10,41 @@ function POINT:new()
     return self
 end
 
+function POINT:get_x()
+    return self._x
+end
+function POINT:set_x(x)
+    self._x = x
+    self[1] = x*self.weight
+end
+function POINT:get_y()
+    return self._y
+end
+function POINT:set_y(y)
+    self._y = y
+    self[2] = y*self.weight
+end
+function POINT:get_z()
+    return self._z
+end
+function POINT:set_z(z)
+    self._z = z
+    self[3] = z*self.weight
+end
+function POINT:get_weight()
+    if not self[4] then
+        self[4] = 1
+    end
+    return self[4]
+end
+function POINT:set_weight(weight)
+    local old = self.weight
+    for i=1,3 do
+        self[i] = self[i]*weight/old
+    end
+    self[4] = weight
+end
+
 local drawer = require 'func.drawer'
 
 function POINT:draw()

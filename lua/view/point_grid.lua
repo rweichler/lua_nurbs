@@ -1,5 +1,6 @@
 VIEW = require 'lua.view'
 POINT_VIEW = require 'lua.view.point'
+NURBS = require 'lua.nurbs'
 
 local GRID = VIEW()
 

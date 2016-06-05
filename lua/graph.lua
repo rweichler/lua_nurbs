@@ -17,9 +17,18 @@ local step = 0.001
 function GRAPH:draw()
     local coords = self:coords()
     SET_COLOR(self.color[1]/255, self.color[2]/255, self.color[3]/255)
-    move(coords(0))
-    for t=step,1,step do
-        draw(coords(t))
+
+    local moved = false
+    for t=0,1,step do
+        local x, y, z = coords(t)
+        if x and y and z then
+            if not moved then
+                move(x, y, z)
+                moved = true
+            else
+                draw(x, y, z)
+            end
+        end
     end
 end
 
