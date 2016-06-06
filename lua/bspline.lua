@@ -15,7 +15,15 @@ function BSPLINE:init()
     assert(self.degree)
     assert(points)
     assert(knots)
-    assert(#points + self.degree + 1 == #knots)
+
+    local please = #points + self.degree + 1 == #knots
+    if not please then
+        print("KNOTS ARNT ADDING UP!!")
+        print("#points = "..#points)
+        print("degree = "..self.degree)
+        print("#knots = "..#knots)
+        error("lol")
+    end
 
 
     if self.c_shit then

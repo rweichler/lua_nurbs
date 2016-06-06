@@ -70,6 +70,8 @@ Type these commmands. Insert `true` or `false` in the parentheses in order to ad
 
 `grid:add_column()`
 
+**NOTE**: Adding/deleting columns/rows makes the knot vector uniform.
+
 ## Changing the weights of the points
 
 As per the instructions above, highlight green the point whose weight you want to change.
@@ -88,3 +90,25 @@ Then type this to refresh the grid:
 ## Changing the order
 
 Change the value for `grid.column_order` and `grid.row_order`.
+
+## Knots
+
+Manipulate the tables `COLUMN_KNOTS` and `ROW_KNOTS`.
+
+Arrays in Lua are 1-based (instead of 0-based like in C and every other language like it) so keep that in mind.
+
+If you want to know a knot value:
+
+`return COLUMN_KNOTS[1]`
+
+If you want to set it:
+
+`COLUMN_KNOTS[1] = 2`
+
+If you want to know how many there are:
+
+`return #COLUMN_KNOTS`
+
+After you're done manipulating it, do this:
+
+`grid:eval()`

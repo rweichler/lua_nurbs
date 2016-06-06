@@ -51,8 +51,8 @@ function GRID:new(m, n)
 end
 
 function GRID:redo_knots()
-    ROW_KNOTS = gen_knots(#self.points + ROW_ORDER + 1)
-    COLUMN_KNOTS = gen_knots(#self.points[1] + COLUMN_ORDER + 1)
+    ROW_KNOTS = gen_knots(#self.points + ROW_ORDER)
+    COLUMN_KNOTS = gen_knots(#self.points[1] + COLUMN_ORDER)
 end
 
 
@@ -168,7 +168,7 @@ function GRID:eval_internal(rows, this_order, other_order, this_knots, other_kno
         local spline = BSPLINE()
         spline.degree = this_order - 1
         spline.points = v
-        generate_knots(spline)
+        spline.knots = this_knots
         spline:init()
         table.insert(round_1, spline)
     end
@@ -182,7 +182,7 @@ function GRID:eval_internal(rows, this_order, other_order, this_knots, other_kno
             table.insert(pt, 1)
             table.insert(spline.points, pt)
         end
-        generate_knots(spline)
+        spline.knots = other_knots
         spline:init()
         table.insert(self.splines, spline)
         self:add_subview(spline)
@@ -207,7 +207,7 @@ function GRID:eval()
     self.splines = {}
 
     --horizontal
-    self:eval_internal(self.points, COLUMN_ORDER, ROW_ORDER)
+    self:eval_internal(self.points, COLUMN_ORDER, ROW_ORDER, COLUMN_KNOTS, ROW_KNOTS)
 
     --vertical
     local points = {}
@@ -218,7 +218,7 @@ function GRID:eval()
             table.insert(pts, v[i])
         end
     end
-    self:eval_internal(points, ROW_ORDER, COLUMN_ORDER)
+    self:eval_internal(points, ROW_ORDER, COLUMN_ORDER, ROW_KNOTS, COLUMN_KNOTS)
 end
 
 function GRID:get_active()
