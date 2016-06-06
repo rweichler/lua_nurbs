@@ -70,7 +70,7 @@ Type these commmands. Insert `true` or `false` in the parentheses in order to ad
 
 `grid:add_column()`
 
-**NOTE**: Adding/deleting columns/rows makes the knot vector uniform.
+**NOTE**: Adding/deleting columns/rows makes the knot vector uniform, so any changes you made to it will be lost.
 
 ## Changing the weights of the points
 
