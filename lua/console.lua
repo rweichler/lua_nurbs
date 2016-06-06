@@ -5,7 +5,6 @@ local CONSOLE = VIEW()
 local bg = {20, 20, 20}
 
 local MAX_BUFFER = math.floor(SCREEN_HEIGHT/2/15 - 1)
-print(MAX_BUFFER)
 
 function CONSOLE:new()
     local self = VIEW.new(self)
@@ -37,12 +36,11 @@ function CONSOLE:draw()
     for i, v in ipairs(self.old_commands) do
         if type(v) == "table" then
             SET_COLOR(unpack(v.color))
-            v = v.text
-            print(v.text)
+            v = tostring(v.text)
         else
             SET_COLOR(0.8, 0.8, 0.8)
         end
-        DRAW_TEXT(v, 0, self.y + (i - 1)*15)
+        DRAW_TEXT(v, 0, (MAX_BUFFER - #self.old_commands)*15 + self.y + (i - 1)*15)
     end
     SET_COLOR(1, 1, 1)
     DRAW_TEXT(self.current_command, 0, self.y + self.height - 15)
@@ -70,10 +68,13 @@ function CONSOLE:run_command()
     if err then
         table.insert(self.old_commands, {color = {0.8, 0, 0}, text = err})
     else
-        f()
+        f = f()
+    end
+    if f ~= nil then
+        table.insert(self.old_commands, {color = {0, 0.8, 0}, text = f})
     end
     self.current_command = ""
-    if #self.old_commands > MAX_BUFFER then
+    while #self.old_commands > MAX_BUFFER do
         table.remove(self.old_commands, 1)
     end
 end
