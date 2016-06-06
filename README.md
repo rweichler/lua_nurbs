@@ -112,3 +112,14 @@ If you want to know how many there are:
 After you're done manipulating it, do this:
 
 `grid:eval()`
+
+
+## Resolution
+
+This makes a lame square:
+
+`grid.resolution = 1`
+
+This makes it super hi-def (but laggy):
+
+`grid.resolution = 100`
