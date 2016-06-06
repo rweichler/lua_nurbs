@@ -87,12 +87,4 @@ Then type this to refresh the grid:
 
 ## Changing the order
 
-`COLUMN_ORDER = 2`
-
-or 
-
-`ROW_ORDER = 2`
-
-Then:
-
-`grid:eval()`
+Change the value for `grid.column_order` and `grid.row_order`.

@@ -13,6 +13,17 @@ GRID._resolution = 10
 ROW_ORDER = 2
 COLUMN_ORDER = 2
 
+ROW_KNOTS = {}
+COLUMN_KNOTS = {}
+
+local function gen_knots(count)
+    local knots = {}
+    for i=1,count do
+        knots[i] = (i-1)/(count + 1)
+    end
+    return knots
+end
+
 function GRID:new(m, n)
     assert(m > 0 and n > 0)
     local self = VIEW.new(self)
@@ -32,8 +43,35 @@ function GRID:new(m, n)
         end
     end
     self:set_selected(1, 1)
+
+    self:redo_knots()
+
     self:eval()
     return self
+end
+
+function GRID:redo_knots()
+    ROW_KNOTS = gen_knots(#self.points + ROW_ORDER + 1)
+    COLUMN_KNOTS = gen_knots(#self.points[1] + COLUMN_ORDER + 1)
+end
+
+
+function GRID:set_row_order(order)
+    ROW_ORDER = order
+    self:redo_knots()
+end
+
+function GRID:set_column_order(order)
+    COLUMN_ORDER = order
+    self:redo_knots()
+end
+
+function GRID:get_row_order()
+    return ROW_ORDER
+end
+
+function GRID:get_column_order()
+    return COLUMN_ORDER
 end
 
 function GRID:add_column(at_end)
@@ -63,6 +101,7 @@ function GRID:add_column(at_end)
     else
         table.insert(self.points, 1, new_column)
     end
+    self:redo_knots()
     self:eval()
 end
 
@@ -88,6 +127,7 @@ function GRID:add_row(at_end)
         end
         self:add_subview(pt)
     end
+    self:redo_knots()
     self:eval()
 end
 
@@ -103,6 +143,7 @@ function GRID:delete_column(at_end)
     for i, v in ipairs(column) do
         v:remove_from_superview()
     end
+    self:redo_knots()
     self:eval()
 end
 
@@ -113,19 +154,15 @@ function GRID:delete_row(at_end)
         pt:remove_from_superview()
         table.remove(tbl, idx)
     end
+    self:redo_knots()
     self:eval()
 end
 
 local function generate_knots(spline)
-    local knots = {}
-    local count = #spline.points + spline.degree + 1
-    for i=1,count do
-        knots[i] = (i-1)/(count + 1)
-    end
-    spline.knots = knots
+    spline.knots = gen_knots(#spline.points + spline.degree + 1)
 end
 local DEGRE = 2
-function GRID:eval_internal(rows, this_order, other_order)
+function GRID:eval_internal(rows, this_order, other_order, this_knots, other_knots)
     local round_1 = {}
     for i,v in ipairs(rows) do
         local spline = BSPLINE()

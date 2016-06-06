@@ -64,8 +64,6 @@ DRAW_LINE = ffi.C.l_draw_line
 REDISPLAY = ffi.C.glutPostRedisplay
 DRAW_TEXT = ffi.C.l_draw_text
 
-EVALUATE_SPLINE = ffi.C.l_evaluate_spline
-
 local window = VIEW()
 window.width = SCREEN_WIDTH
 window.height = SCREEN_HEIGHT
