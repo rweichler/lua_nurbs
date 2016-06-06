@@ -1,6 +1,7 @@
 #include <lua.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 int l_setup_bspline(lua_State *L)
 {
@@ -70,7 +71,7 @@ int l_eval_bspline(lua_State *L)
         int N = last - first + 1;
 
         int n_result = N * (N + 1)/2;
-        float result[n_result];
+        float result[n_result * dim];
         memcpy(result, &points[first*dim], N*dim*sizeof(float));
 
         int lidx = 0;
@@ -90,7 +91,7 @@ int l_eval_bspline(lua_State *L)
         }
 
         for(int i = 0; i < dim; i++) {
-            lua_pushnumber(L, result[n_result - dim + i]);
+            lua_pushnumber(L, result[(n_result - 1)*dim + i]);
         }
     } else { // edge case
         int idx;
