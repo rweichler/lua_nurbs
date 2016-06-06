@@ -7,6 +7,7 @@
 #include <lualib.h>
 #include <stdlib.h>
 #include "tinyspline.h"
+#include "bspline.h"
 
 const unsigned int SCREEN_WIDTH = 1024;
 const unsigned int SCREEN_HEIGHT = 768;
@@ -216,6 +217,8 @@ int main(int argc, char *argv[])
 
     lua_pushnumber(L, SCREEN_HEIGHT);
     lua_setglobal(L, "SCREEN_HEIGHT");
+
+    setup_bspline(L);
 
     luaL_loadfile(L, "ui.lua");
     if(lua_isstring(L, -1)) {
