@@ -16,6 +16,7 @@ end
 local step = 0.001
 function GRAPH:draw()
     local coords = self:coords()
+    if not coords then return end
     SET_COLOR(self.color[1]/255, self.color[2]/255, self.color[3]/255)
 
     local moved = false

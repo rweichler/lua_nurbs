@@ -25,6 +25,16 @@ function GRID:new(m, n)
         end
     end
     self:set_selected(1, 1)
+    self.nurbs = NURBS()
+    self.nurbs.degree = 2
+    self.nurbs.points = self.points[1]
+    self.nurbs.knots = {}
+    local count = #self.points[1] + self.nurbs.degree + 1
+    for i=1,count do
+        self.nurbs.knots[i] = (i-1)/(count + 1)
+    end
+    self.nurbs:init()
+    self:add_subview(self.nurbs)
     return self
 end
 
@@ -110,6 +120,7 @@ function GRID:keypress(key)
     local f = pt_keyfuncs[key]
     if f then
         f(self.selected_point)
+        self.nurbs:update_points()
         return true
     end
     local f = keyfuncs[key]

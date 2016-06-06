@@ -180,8 +180,7 @@ float *l_evaluate_spline(tsBSpline *spline, float u)
     tsDeBoorNet net;
     const tsError err = ts_bspline_evaluate(spline, u, &net);
     if (err < 0) {
-        printf("%s\n", ts_enum_str(err));
-        exit(1);
+        luaL_error(L, "%s\n", ts_enum_str(err));
     }
 
     for(int i = 0; i < spline->dim; i++) {

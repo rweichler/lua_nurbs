@@ -13,7 +13,7 @@ function VIEW:new()
 end
 
 function VIEW:add_subview(view)
-    if not view then error('no view') end
+    if not view then error('view is nil', 2) end
     if view.superview then
         view:remove_from_superview()
     end
@@ -23,7 +23,7 @@ function VIEW:add_subview(view)
 end
 
 function VIEW:remove_from_superview()
-    assert(self.superview, "no superview")
+    if not self.superview then error('superview is nil', 2) end
 
     local removed = false
     for i,v in ipairs(self.superview.subviews) do

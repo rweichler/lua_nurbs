@@ -48,6 +48,7 @@ int ts_bspline_new(
 );
 void ts_bspline_free(tsBSpline* bspline);
 float *l_evaluate_spline(tsBSpline *spline, float u);
+const char *ts_enum_str(int);
 ]]
 
 
@@ -99,38 +100,7 @@ local drawer = require 'func.drawer'
 
 
 function display()
-    local move, draw = drawer()
-
-    local s = 10
-
-    DRAW_TEXT("lmfao", 20, 20);
-    move(0, 0, 0)
-    SET_COLOR(1.0, 0.0, 0.0)
-    draw(0, 0, s)
-    draw(s, 0, s)
-    draw(s, 0, 0)
-    draw(0, 0, 0)
-
-    move(0, s, 0)
-    SET_COLOR(0, 1, 0)
-    draw(0, s, s)
-    draw(s, s, s)
-    draw(s, s, 0)
-    draw(0, s, 0) 
-
-    SET_COLOR(0, 0, 1)
-    draw(0, 0, 0)
-    move(0, 0, s)
-    draw(0, s, s)
-    move(s, 0, s)
-    draw(s, s, s)
-    move(s, 0, 0)
-    draw(s, s, 0)
-
-    DRAW_TEXT("lmfao", 20, 20);
-
     window:render()
-    DRAW_TEXT("lmfao", 20, 20);
 end
 
 function click(button, state, x, y)
@@ -154,6 +124,9 @@ end
 
 local camera_keyfuncs = require 'func.camera_keys'
 function keypress(key)
+    if key == 'q' then
+        toggle:pressed()
+    end
     if toggle.on then
         if grid:keypress(key) then
             REDISPLAY()
@@ -166,38 +139,3 @@ function keypress(key)
         end
     end
 end
-
-
-local nurbs = NURBS()
-local w = math.sqrt(2)/2
-nurbs.degree = 2
-nurbs.points = {
-    {1, 0, 0, 1},
-    {w, w, 0, w},
-    {0, 1, 0, 1},
-    {-w, w, 0, w},
-    {-1, 0, 0, 1},
-    {-w, -w, 0, w},
-    {0, -1, 0, 1},
-    {w, -w, 0, w},
-    {1, 0, 0, 1}
-}
-nurbs.knots = {
-    0,
-    0,
-    0,
-    1/4,
-    1/4,
-    2/4,
-    2/4,
-    3/4,
-    3/4,
-    1,
-    1,
-    1
-}
-
-nurbs:init()
-
-local pt = EVALUATE_SPLINE(nurbs.spline, 0.5)
-print(pt[0], pt[1], pt[2], pt[3])
