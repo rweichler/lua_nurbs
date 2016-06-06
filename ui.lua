@@ -93,6 +93,7 @@ end
 window:add_subview(toggle)
 
 local graph = GRAPH()
+graph.color = {255, 0, 0}
 window:add_subview(graph)
 
 local drawer = require 'func.drawer'

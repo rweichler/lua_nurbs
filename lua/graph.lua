@@ -9,7 +9,7 @@ function GRAPH:coords()
     local s = 10
     return function(t)
         t = t*s
-        return math.sqrt(t)/s*10, t, 0
+        return math.sqrt(t)/s*10, t, math.sin(t)
     end
 end
 
