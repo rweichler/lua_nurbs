@@ -8,7 +8,7 @@ local MAX_BUFFER = math.floor(SCREEN_HEIGHT/2/15 - 1)
 
 function CONSOLE:new()
     local self = VIEW.new(self)
-    self.old_commands = {}
+    self.old_commands = {{color = {0, 0.5, 1}, text = "LOL LUA CONSOLE"}}
     self.current_command = ""
     self.x = 0
     self.y = SCREEN_HEIGHT/2

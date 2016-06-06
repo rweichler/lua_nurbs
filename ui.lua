@@ -51,7 +51,6 @@ float *l_evaluate_spline(tsBSpline *spline, float u);
 const char *ts_enum_str(int);
 ]]
 
-
 CAMERA = ffi.C.l_camera()
 ROTATION = ffi.C.l_rotation()
 
@@ -74,7 +73,7 @@ window.height = SCREEN_HEIGHT
 local console = CONSOLE()
 window:add_subview(console)
 
-local grid = GRID(6, 6)
+grid = GRID(6, 6)
 window:add_subview(grid)
 
 local toggle = TOGGLE()
@@ -94,10 +93,6 @@ toggle.toggled = function(self)
     REDISPLAY()
 end
 window:add_subview(toggle)
-
-local graph = GRAPH()
-graph.color = {255, 0, 0}
-window:add_subview(graph)
 
 local drawer = require 'func.drawer'
 
@@ -147,3 +142,6 @@ function keypress(key)
         end
     end
 end
+
+
+exit = os.exit

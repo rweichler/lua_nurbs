@@ -8,10 +8,17 @@ local SCALE = 1
 local BRIGHT_COLOR = {0, 255, 0}
 local DIM_COLOR = {100, 100, 100}
 
+GRID._resolution = 10
+
+ROW_ORDER = 2
+COLUMN_ORDER = 2
+
 function GRID:new(m, n)
     assert(m > 0 and n > 0)
-
     local self = VIEW.new(self)
+
+
+    self.color = {100, 255, 255}
     self.points = {}
     for i=1,m do
         self.points[i] = {}
@@ -25,17 +32,156 @@ function GRID:new(m, n)
         end
     end
     self:set_selected(1, 1)
-    self.bspline = BSPLINE()
-    self.bspline.degree = 2
-    self.bspline.points = self.points[1]
-    self.bspline.knots = {}
-    local count = #self.points[1] + self.bspline.degree + 1
-    for i=1,count do
-        self.bspline.knots[i] = (i-1)/(count + 1)
-    end
-    self.bspline:init()
-    self:add_subview(self.bspline)
+    self:eval()
     return self
+end
+
+function GRID:add_column(at_end)
+    local new_column = {}
+    local last_column
+    local delta
+    if at_end then
+        last_column = self.points[#self.points]
+        delta = 1
+    else
+        last_column = self.points[1]
+        delta = -1
+    end
+
+    for i, v in ipairs(last_column) do
+        local pt = POINT_VIEW()
+        pt.color = DIM_COLOR
+        pt.x = v.x + delta
+        pt.y = v.y
+        pt.z = v.z
+        pt.weight = v.weight
+        table.insert(new_column, pt)
+        self:add_subview(pt)
+    end
+    if at_end then
+        table.insert(self.points, new_column)
+    else
+        table.insert(self.points, 1, new_column)
+    end
+    self:eval()
+end
+
+function GRID:add_row(at_end)
+    local delta = at_end and 1 or -1
+    for i, tbl in ipairs(self.points) do
+        local v
+        if at_end then
+            v = tbl[#tbl]
+        else
+            v = tbl[1]
+        end
+        local pt = POINT_VIEW()
+        pt.color = DIM_COLOR
+        pt.x = v.x
+        pt.y = v.y
+        pt.z = v.z + delta
+        pt.weight = v.weight
+        if at_end then
+            table.insert(tbl, pt)
+        else
+            table.insert(tbl, 1, pt)
+        end
+        self:add_subview(pt)
+    end
+    self:eval()
+end
+
+function GRID:delete_column(at_end)
+    local column
+    if at_end then
+        column = self.points[#self.points]
+        table.remove(self.points, #self.points)
+    else
+        column = self.points[1]
+        table.remove(self.points, 1)
+    end
+    for i, v in ipairs(column) do
+        v:remove_from_superview()
+    end
+    self:eval()
+end
+
+function GRID:delete_row(at_end)
+    for i, tbl in ipairs(self.points) do
+        local idx = at_end and #tbl or 1
+        local pt = tbl[idx]
+        pt:remove_from_superview()
+        table.remove(tbl, idx)
+    end
+    self:eval()
+end
+
+local function generate_knots(spline)
+    local knots = {}
+    local count = #spline.points + spline.degree + 1
+    for i=1,count do
+        knots[i] = (i-1)/(count + 1)
+    end
+    spline.knots = knots
+end
+local DEGRE = 2
+function GRID:eval_internal(rows, this_order, other_order)
+    local round_1 = {}
+    for i,v in ipairs(rows) do
+        local spline = BSPLINE()
+        spline.degree = this_order - 1
+        spline.points = v
+        generate_knots(spline)
+        spline:init()
+        table.insert(round_1, spline)
+    end
+    for t=0,1, 1/self.resolution do
+        local spline = BSPLINE()
+        spline.color = self.color
+        spline.points = {}
+        spline.degree = other_order - 1
+        for i, v in ipairs(round_1) do
+            local pt = {v:coords()(t)}
+            table.insert(pt, 1)
+            table.insert(spline.points, pt)
+        end
+        generate_knots(spline)
+        spline:init()
+        table.insert(self.splines, spline)
+        self:add_subview(spline)
+    end
+end
+
+function GRID:set_resolution(r)
+    self._resolution = r
+    self:eval()
+end
+
+function GRID:get_resolution()
+    return self._resolution
+end
+
+function GRID:eval()
+    if self.splines then
+        for i, v in ipairs(self.splines) do
+            v:remove_from_superview()
+        end
+    end
+    self.splines = {}
+
+    --horizontal
+    self:eval_internal(self.points, COLUMN_ORDER, ROW_ORDER)
+
+    --vertical
+    local points = {}
+    for i=1, #self.points[1] do
+        local pts = {}
+        table.insert(points, pts)
+        for _, v in ipairs(self.points) do
+            table.insert(pts, v[i])
+        end
+    end
+    self:eval_internal(points, ROW_ORDER, COLUMN_ORDER)
 end
 
 function GRID:get_active()
@@ -120,7 +266,7 @@ function GRID:keypress(key)
     local f = pt_keyfuncs[key]
     if f then
         f(self.selected_point)
-        self.bspline:init()
+        self:eval()
         return true
     end
     local f = keyfuncs[key]
