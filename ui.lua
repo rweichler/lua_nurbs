@@ -10,6 +10,7 @@ POINT_VIEW = require 'lua.view.point'
 GRID = require 'lua.view.point_grid'
 GRAPH = require 'lua.graph'
 NURBS = require 'lua.nurbs'
+CONSOLE = require 'lua.console'
 
 ffi.cdef[[
 void glColor3f(float, float, float);
@@ -71,6 +72,9 @@ local window = VIEW()
 window.width = SCREEN_WIDTH
 window.height = SCREEN_HEIGHT
 
+local console = CONSOLE()
+window:add_subview(console)
+
 local grid = GRID(6, 6)
 window:add_subview(grid)
 
@@ -125,6 +129,10 @@ end
 
 local camera_keyfuncs = require 'func.camera_keys'
 function keypress(key)
+    if console:keypress(key) then
+        REDISPLAY()
+        return
+    end
     if key == 'q' then
         toggle:pressed()
     end
