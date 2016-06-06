@@ -47,6 +47,7 @@ int ts_bspline_new(
     tsBSpline* bspline
 );
 void ts_bspline_free(tsBSpline* bspline);
+float *l_evaluate_spline(tsBSpline *spline, float u);
 ]]
 
 
@@ -62,6 +63,8 @@ FILL_RECT = ffi.C.l_fill_rect
 DRAW_LINE = ffi.C.l_draw_line
 REDISPLAY = ffi.C.glutPostRedisplay
 DRAW_TEXT = ffi.C.l_draw_text
+
+EVALUATE_SPLINE = ffi.C.l_evaluate_spline
 
 local window = VIEW()
 window.width = SCREEN_WIDTH
@@ -163,3 +166,38 @@ function keypress(key)
         end
     end
 end
+
+
+local nurbs = NURBS()
+local w = math.sqrt(2)/2
+nurbs.degree = 2
+nurbs.points = {
+    {1, 0, 0, 1},
+    {w, w, 0, w},
+    {0, 1, 0, 1},
+    {-w, w, 0, w},
+    {-1, 0, 0, 1},
+    {-w, -w, 0, w},
+    {0, -1, 0, 1},
+    {w, -w, 0, w},
+    {1, 0, 0, 1}
+}
+nurbs.knots = {
+    0,
+    0,
+    0,
+    1/4,
+    1/4,
+    2/4,
+    2/4,
+    3/4,
+    3/4,
+    1,
+    1,
+    1
+}
+
+nurbs:init()
+
+local pt = EVALUATE_SPLINE(nurbs.spline, 0.5)
+print(pt[0], pt[1], pt[2], pt[3])

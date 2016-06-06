@@ -1,9 +1,11 @@
 C_FILES=$(wildcard *.c)
 O_FILES=$(C_FILES:%.c=%.o)
 EXECUTABLE=a.out
+#USR_LOCAL=/usr/local
+USR_LOCAL=/Users/clmuser/Adobe/brew
 
-CFLAGS=-Wno-deprecated-declarations -I/usr/local/include/luajit-2.0
-LDFLAGS=-lluajit -L/usr/local/lib -pagezero_size 10000 -image_base 100000000
+CFLAGS=-Wno-deprecated-declarations -I$(USR_LOCAL)/include/luajit-2.0
+LDFLAGS=-lluajit -L$(USR_LOCAL)/lib -pagezero_size 10000 -image_base 100000000
 
 .PHONY: all clean
 

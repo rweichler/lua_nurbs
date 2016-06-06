@@ -13,18 +13,23 @@ end
 
 
 
+local DIM = 4
 function NURBS:init(points, knots)
+    points = points or self.points
+    knots = knots or self.knots
     assert(self.degree)
+    assert(points)
+    assert(knots)
     assert(#points + self.degree + 1 == #knots)
     local TS_CLAMPED = 1
     ffi.C.ts_bspline_free(self.spline)
-    ffi.C.ts_bspline_new(self.degree, 4, #points, TS_CLAMPED, self.spline)
+    ffi.C.ts_bspline_new(self.degree, DIM, #points, TS_CLAMPED, self.spline)
+    local spline = self.spline[0]
     for i, v in ipairs(points) do
-        local idx = (i - 1)*4
-        self.spline.ctrlp[idx + 0] = v[1]
-        self.spline.ctrlp[idx + 1] = v[2]
-        self.spline.ctrlp[idx + 2] = v[3]
-        self.spline.ctrlp[idx + 3] = v[4]
+        local idx = (i - 1)*DIM
+        for i=1,DIM do
+            spline.ctrlp[idx + i - 1] = v[i]
+        end
     end
 
     for i, v in ipairs(knots) do

@@ -6,9 +6,10 @@
 #include <lauxlib.h>
 #include <lualib.h>
 #include <stdlib.h>
+#include "tinyspline.h"
 
-const unsigned int SCREEN_WIDTH = 1280;
-const unsigned int SCREEN_HEIGHT = 800;
+const unsigned int SCREEN_WIDTH = 1024;
+const unsigned int SCREEN_HEIGHT = 768;
 
 char buffer[SCREEN_WIDTH*SCREEN_HEIGHT*4];
 char black_buffer[SCREEN_WIDTH*SCREEN_HEIGHT*3];
@@ -173,6 +174,23 @@ void glut_special_keyboard(int key, int x, int y)
     }
 }
 
+float curve_pts[4];
+float *l_evaluate_spline(tsBSpline *spline, float u)
+{
+    tsDeBoorNet net;
+    const tsError err = ts_bspline_evaluate(spline, u, &net);
+    if (err < 0) {
+        printf("%s\n", ts_enum_str(err));
+        exit(1);
+    }
+
+    for(int i = 0; i < spline->dim; i++) {
+        curve_pts[i] = net.result[i];
+    }
+
+    return curve_pts;
+}
+
 int main(int argc, char *argv[])
 {
     memset(black_buffer, 0x00, sizeof(black_buffer));
@@ -218,7 +236,6 @@ int main(int argc, char *argv[])
     lua_getglobal(L, "keypress");
     lua_keypress = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    glutFullScreen();
     glutMainLoop();
 
     return 0;
