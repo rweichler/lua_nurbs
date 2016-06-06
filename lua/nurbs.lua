@@ -1,15 +1,15 @@
 GRAPH = require 'lua.graph'
 
-local NURBS = GRAPH()
+local BSPLINE = GRAPH()
 
-function NURBS:new()
+function BSPLINE:new()
     local self = GRAPH.new(self)
 
     return self
 end
 
 local DIM = 4
-function NURBS:init()
+function BSPLINE:init()
     local points = self.points
     local knots = self.knots
     assert(self.degree)
@@ -25,10 +25,7 @@ function NURBS:init()
     self.c_shit = {BSPLINE_SETUP(#points, #knots, DIM, points, knots)}
 end
 
-NURBS.update_points = NURBS.init
-NURBS.update_knots = NURBS.init
-
-function NURBS:coords()
+function BSPLINE:coords()
     if not self.points and not self.knots and not self.c_shit then return end
     local first = self.knots[self.degree + 1]
     local last = self.knots[#self.knots - self.degree]
@@ -46,4 +43,4 @@ function NURBS:coords()
 end
 
 
-return NURBS
+return BSPLINE
