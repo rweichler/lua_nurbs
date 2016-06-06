@@ -9,7 +9,6 @@ TOGGLE = require 'lua.toggle'
 POINT_VIEW = require 'lua.view.point'
 GRID = require 'lua.view.point_grid'
 GRAPH = require 'lua.graph'
-NURBS = require 'lua.nurbs'
 CONSOLE = require 'lua.console'
 
 ffi.cdef[[
