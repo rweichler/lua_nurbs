@@ -6,7 +6,6 @@
 #include <lauxlib.h>
 #include <lualib.h>
 #include <stdlib.h>
-#include "tinyspline.h"
 #include "bspline.h"
 
 const unsigned int SCREEN_WIDTH = 1024;
@@ -174,22 +173,6 @@ void glut_special_keyboard(int key, int x, int y)
         lua_pushstring(L, str);
         luacall(1, 0);
     }
-}
-
-float curve_pts[4];
-float *l_evaluate_spline(tsBSpline *spline, float u)
-{
-    tsDeBoorNet net;
-    const tsError err = ts_bspline_evaluate(spline, u, &net);
-    if (err < 0) {
-        luaL_error(L, "%s\n", ts_enum_str(err));
-    }
-
-    for(int i = 0; i < spline->dim; i++) {
-        curve_pts[i] = net.result[i];
-    }
-
-    return curve_pts;
 }
 
 int main(int argc, char *argv[])
