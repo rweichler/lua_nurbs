@@ -38,14 +38,18 @@ function BSPLINE:coords()
     local first = self.knots[self.degree + 1]
     local last = self.knots[#self.knots - self.degree]
     local span = last - first
-    local EVALUATE_SPLINE = EVALUATE_SPLINE
+    local BSPLINE_EVAL = BSPLINE_EVAL
     local spline = self.spline
 
     local points = self.c_shit[1]
     local knots = self.c_shit[2]
+
+    local n_points = #self.points
+    local n_knots = #self.knots
+    local degree = self.degree
     return function(t)
         local u = t*span + first
-        local x, y, z, w = BSPLINE_EVAL(points, knots, #self.points, #self.knots, DIM, u, self.degree)
+        local x, y, z, w = BSPLINE_EVAL(points, knots, n_points, n_knots, DIM, u, degree)
         return x/w, y/w, z/w
     end
 end

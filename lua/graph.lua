@@ -13,7 +13,7 @@ function GRAPH:coords()
     end
 end
 
-local step = 0.001
+local step = 0.01
 function GRAPH:draw()
     local coords = self:coords()
     if not coords then return end

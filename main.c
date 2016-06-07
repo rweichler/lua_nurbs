@@ -11,9 +11,6 @@
 const unsigned int SCREEN_WIDTH = 1024;
 const unsigned int SCREEN_HEIGHT = 768;
 
-char buffer[SCREEN_WIDTH*SCREEN_HEIGHT*4];
-char black_buffer[SCREEN_WIDTH*SCREEN_HEIGHT*3];
-
 float camera[3] = {0, 0, 0};
 float rotation[2] = {0, 0};
 
@@ -109,8 +106,6 @@ void glut_display()
 
     gluPerspective(45.0f, SCREEN_WIDTH*1.0/SCREEN_HEIGHT, 0.5f, 300000.0f);
 
-    glDrawPixels(SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, black_buffer);
-
     lua_rawgeti(L, LUA_REGISTRYINDEX, lua_display);
     luacall(0, 0);
 
@@ -177,8 +172,6 @@ void glut_special_keyboard(int key, int x, int y)
 
 int main(int argc, char *argv[])
 {
-    memset(black_buffer, 0x00, sizeof(black_buffer));
-    memset(buffer, 0x00, sizeof(buffer));
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE);
     glutInitWindowSize(SCREEN_WIDTH, SCREEN_HEIGHT);
