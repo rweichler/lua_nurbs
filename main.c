@@ -8,23 +8,23 @@
 #include <stdlib.h>
 #include "bspline.h"
 
-const unsigned int SCREEN_WIDTH = 1024;
-const unsigned int SCREEN_HEIGHT = 768;
+const unsigned int SCREEN_WIDTH = 1280;
+const unsigned int SCREEN_HEIGHT = 800;
 
-float camera[3] = {0, 0, 0};
-float rotation[2] = {0, 0};
+float camera_position[3] = {0, 0, 0};
+float camera_rotation[2] = {0, 0};
 
 lua_State *L;
 int lua_display, lua_drag, lua_click, lua_keypress;
 
-float *l_camera()
+float *l_camera_position()
 {
-    return camera;
+    return camera_position;
 }
 
-float *l_rotation()
+float *l_camera_rotation()
 {
-    return rotation;
+    return camera_rotation;
 }
 
 void luacall(int args, int ret)
@@ -35,16 +35,17 @@ void luacall(int args, int ret)
     }
 }
 
-void draw_line(float p1[3], float p2[3])
+void l_draw_line(float x1, float y1, float z1, float x2, float y2, float z2)
 {
-    float p[2][3];
-    for(int i = 0; i < 3; i++) {
-        p[0][i] = p1[i] - camera[i];
-        p[1][i] = p2[i] - camera[i];
+    float p[2][3] = {{x1, y1, z1}, {x2, y2, z2}};
+    for(int i = 0; i < 2; i++) {
+        for(int j = 0; j < 3; j++) {
+            p[i][j] -= camera_position[j];
+        }
     }
 
     //rotate left-right
-    float a = rotation[0];
+    float a = camera_rotation[0];
     for(int i = 0; i < 2; i++) {
         float x = p[i][0];
         float z = p[i][2];
@@ -53,7 +54,7 @@ void draw_line(float p1[3], float p2[3])
     }
 
     //rotate up-down
-    float b = rotation[1];
+    float b = camera_rotation[1];
     for(int i = 0; i < 2; i++) {
         float y = p[i][1];
         float z = p[i][2];
@@ -67,12 +68,6 @@ void draw_line(float p1[3], float p2[3])
         glVertex3f(p[i][0], p[i][1], -p[i][2]);
     }
     glEnd();
-}
-void l_draw_line(float x1, float y1, float z1, float x2, float y2, float z2)
-{
-    float p1[3] = {x1, y1, z1};
-    float p2[3] = {x2, y2, z2};
-    draw_line(p1, p2);
 }
 
 void l_fill_rect(int x, int y, int width, int height, char r, char g, char b) 
@@ -215,6 +210,7 @@ int main(int argc, char *argv[])
     lua_getglobal(L, "keypress");
     lua_keypress = luaL_ref(L, LUA_REGISTRYINDEX);
 
+    glutFullScreen();
     glutMainLoop();
 
     return 0;

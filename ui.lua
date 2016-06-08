@@ -17,8 +17,8 @@ void l_fill_rect(int x, int y, int width, int height, char r, char g, char b);
 void l_draw_line(float x1, float y1, float z1, float x2, float y2, float z2);
 void glutPostRedisplay();
 void l_draw_text(const char *str, int x, int y);
-float *l_camera();
-float *l_rotation();
+float *l_camera_position();
+float *l_camera_rotation();
 int glutGetModifiers();
 typedef struct
 {
@@ -51,8 +51,8 @@ float *l_evaluate_spline(tsBSpline *spline, float u);
 const char *ts_enum_str(int);
 ]]
 
-CAMERA = ffi.C.l_camera()
-ROTATION = ffi.C.l_rotation()
+CAMERA = ffi.C.l_camera_position()
+ROTATION = ffi.C.l_camera_rotation()
 
 CAMERA[0] = DELTA*5
 CAMERA[1] = DELTA*5
@@ -73,28 +73,6 @@ window:add_subview(console)
 
 grid = GRID(6, 6)
 window:add_subview(grid)
-
-local toggle = TOGGLE()
-toggle.x = 20
-toggle.y = 20
-toggle.width = 60
-toggle.height = 60
-toggle.on_color = {100, 100, 100}
-toggle.off_color = {0, 255, 0}
-toggle.color = toggle.off_color
-toggle.toggled = function(self)
-    if self.on then
-        grid.active = true
-    else
-        grid.active = false
-    end
-    REDISPLAY()
-end
-window:add_subview(toggle)
-
-local drawer = require 'func.drawer'
-
-
 
 function display()
     window:render()
@@ -126,13 +104,15 @@ function keypress(key)
         return
     end
     if key == 'q' then
-        toggle:pressed()
+        grid.active = not grid.active
+        REDISPLAY()
+        return
     end
-    if toggle.on then
+    if grid.active then
         if grid:keypress(key) then
             REDISPLAY()
         end
-    else
+    else 
         local func = camera_keyfuncs[key]
         if func then
             func(grid.selected_point)

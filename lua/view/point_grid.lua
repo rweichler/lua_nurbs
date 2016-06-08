@@ -16,6 +16,18 @@ COLUMN_ORDER = 2
 ROW_KNOTS = {}
 COLUMN_KNOTS = {}
 
+function print_knots(tbl)
+    local str = "{"
+    for k,v in ipairs(tbl) do
+        str = str..v
+        if k ~= #tbl then
+            str = str..", "
+        end
+    end
+    str = str.."}"
+    return str
+end
+
 local function gen_knots(count)
     local knots = {}
     for i=1,count do
@@ -231,12 +243,16 @@ function GRID:set_active(active)
         DIM_COLOR[1] = 255
         DIM_COLOR[2] = 255
         DIM_COLOR[3] = 255
-        self.selected_point.color = BRIGHT_COLOR
+        if self.selected_point then
+            self.selected_point.color = BRIGHT_COLOR
+        end
     else
         DIM_COLOR[1] = 100
         DIM_COLOR[2] = 100
         DIM_COLOR[3] = 100
-        self.selected_point.color = DIM_COLOR
+        if self.selected_point then
+            self.selected_point.color = DIM_COLOR
+        end
     end
 end
 
