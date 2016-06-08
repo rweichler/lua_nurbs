@@ -17,12 +17,12 @@ float camera_rotation[2] = {0, 0};
 lua_State *L;
 int lua_display, lua_drag, lua_click, lua_keypress;
 
-float *l_camera_position()
+float *l_ffi_camera_position()
 {
     return camera_position;
 }
 
-float *l_camera_rotation()
+float *l_ffi_camera_rotation()
 {
     return camera_rotation;
 }
@@ -35,7 +35,7 @@ void luacall(int args, int ret)
     }
 }
 
-void l_draw_line(float x1, float y1, float z1, float x2, float y2, float z2)
+void l_ffi_draw_line(float x1, float y1, float z1, float x2, float y2, float z2)
 {
     float p[2][3] = {{x1, y1, z1}, {x2, y2, z2}};
     for(int i = 0; i < 2; i++) {
@@ -70,7 +70,7 @@ void l_draw_line(float x1, float y1, float z1, float x2, float y2, float z2)
     glEnd();
 }
 
-void l_fill_rect(int x, int y, int width, int height, char r, char g, char b) 
+void l_ffi_fill_rect(int x, int y, int width, int height, char r, char g, char b) 
 {
     glWindowPos2i(x, SCREEN_HEIGHT - y - height);
     char buf[width*height*3];
@@ -82,7 +82,7 @@ void l_fill_rect(int x, int y, int width, int height, char r, char g, char b)
     glDrawPixels(width, height, GL_RGB, GL_UNSIGNED_BYTE, buf);
 }
 
-void l_draw_text(const char *str, int x, int y)
+void l_ffi_draw_text(const char *str, int x, int y)
 {
     glMatrixMode( GL_MODELVIEW );
     glPushMatrix();

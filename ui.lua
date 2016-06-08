@@ -13,56 +13,27 @@ CONSOLE = require 'lua.console'
 
 ffi.cdef[[
 void glColor3f(float, float, float);
-void l_fill_rect(int x, int y, int width, int height, char r, char g, char b);
-void l_draw_line(float x1, float y1, float z1, float x2, float y2, float z2);
+void l_ffi_fill_rect(int x, int y, int width, int height, char r, char g, char b);
+void l_ffi_draw_line(float x1, float y1, float z1, float x2, float y2, float z2);
 void glutPostRedisplay();
-void l_draw_text(const char *str, int x, int y);
-float *l_camera_position();
-float *l_camera_rotation();
+void l_ffi_draw_text(const char *str, int x, int y);
+float *l_ffi_camera_position();
+float *l_ffi_camera_rotation();
 int glutGetModifiers();
-typedef struct
-{
-    size_t deg;
-    size_t order;
-    size_t dim;
-    size_t n_ctrlp;
-    size_t n_knots;
-    float* ctrlp;
-    float* knots;
-} tsBSpline;
-typedef struct
-{
-    float u;
-    size_t k;
-    size_t s;
-    size_t h;
-    size_t dim;
-    size_t n_points;
-    float* points;
-    float* result;
-} tsDeBoorNet;
-int ts_bspline_new(
-    const size_t deg, const size_t dim,
-    const size_t n_ctrlp, int type,
-    tsBSpline* bspline
-);
-void ts_bspline_free(tsBSpline* bspline);
-float *l_evaluate_spline(tsBSpline *spline, float u);
-const char *ts_enum_str(int);
 ]]
 
-CAMERA = ffi.C.l_camera_position()
-ROTATION = ffi.C.l_camera_rotation()
+CAMERA = ffi.C.l_ffi_camera_position()
+ROTATION = ffi.C.l_ffi_camera_rotation()
 
 CAMERA[0] = DELTA*5
 CAMERA[1] = DELTA*5
 CAMERA[2] = -DELTA*20
 
 SET_COLOR = ffi.C.glColor3f
-FILL_RECT = ffi.C.l_fill_rect
-DRAW_LINE = ffi.C.l_draw_line
+FILL_RECT = ffi.C.l_ffi_fill_rect
+DRAW_LINE = ffi.C.l_ffi_draw_line
 REDISPLAY = ffi.C.glutPostRedisplay
-DRAW_TEXT = ffi.C.l_draw_text
+DRAW_TEXT = ffi.C.l_ffi_draw_text
 
 local window = VIEW()
 window.width = SCREEN_WIDTH
