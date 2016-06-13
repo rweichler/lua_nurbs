@@ -8,8 +8,8 @@
 #include <stdlib.h>
 #include "bspline.h"
 
-const unsigned int SCREEN_WIDTH = 1280;
-const unsigned int SCREEN_HEIGHT = 800;
+const unsigned int SCREEN_WIDTH = 1000;
+const unsigned int SCREEN_HEIGHT = 750;
 
 float camera_position[3] = {0, 0, 0};
 float camera_rotation[2] = {0, 0};
@@ -27,9 +27,9 @@ float *l_ffi_camera_rotation()
     return camera_rotation;
 }
 
-void luacall(int args, int ret)
+void luacall(int args)
 {
-    if(lua_pcall(L, args, ret, 0) != 0) {
+    if(lua_pcall(L, args, 0, 0) != 0) {
         printf("%s\n", lua_tostring(L, -1));
         exit(1);
     }
@@ -102,7 +102,7 @@ void glut_display()
     gluPerspective(45.0f, SCREEN_WIDTH*1.0/SCREEN_HEIGHT, 0.5f, 300000.0f);
 
     lua_rawgeti(L, LUA_REGISTRYINDEX, lua_display);
-    luacall(0, 0);
+    luacall(0);
 
     glutSwapBuffers();
 
@@ -115,7 +115,7 @@ void glut_click(int button, int state, int x, int y)
     lua_pushnumber(L, state);
     lua_pushnumber(L, x);
     lua_pushnumber(L, y);
-    luacall(4, 0);
+    luacall(4);
 }
 
 void glut_hover(int x, int y)
@@ -127,7 +127,7 @@ void glut_drag(int x, int y)
     lua_rawgeti(L, LUA_REGISTRYINDEX, lua_drag);
     lua_pushnumber(L, x);
     lua_pushnumber(L, y);
-    luacall(2, 0);
+    luacall(2);
 }
 
 void glut_keyboard(unsigned char key, int x, int y)
@@ -135,7 +135,7 @@ void glut_keyboard(unsigned char key, int x, int y)
     lua_rawgeti(L, LUA_REGISTRYINDEX, lua_keypress);
     char str[2] = {key, '\0'};
     lua_pushstring(L, str);
-    luacall(1, 0);
+    luacall(1);
 }
 
 #define MAP(GLUT, STR) \
@@ -157,11 +157,11 @@ void glut_special_keyboard(int key, int x, int y)
     if(str == NULL) {
         //send the ugly raw key int
         lua_pushnumber(L, key);
-        luacall(1, 0);
+        luacall(1);
     } else {
         //send the nice pretty string
         lua_pushstring(L, str);
-        luacall(1, 0);
+        luacall(1);
     }
 }
 
@@ -196,7 +196,7 @@ int main(int argc, char *argv[])
         printf("%s\n", lua_tostring(L, -1));
         return 1;
     }
-    luacall(0, 0);
+    luacall(0);
 
     lua_getglobal(L, "display");
     lua_display = luaL_ref(L, LUA_REGISTRYINDEX);
@@ -210,7 +210,6 @@ int main(int argc, char *argv[])
     lua_getglobal(L, "keypress");
     lua_keypress = luaL_ref(L, LUA_REGISTRYINDEX);
 
-    glutFullScreen();
     glutMainLoop();
 
     return 0;

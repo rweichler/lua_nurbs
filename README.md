@@ -1,5 +1,9 @@
 # Lua NURBS
 
+![](https://github.com/rweichler/lua_nurbs/raw/master/screen.png)
+
+This is a 3D wireframe NURBS editor for OS X written in Lua (and some C).
+
 ## Setup
 
 ### Prerequisites

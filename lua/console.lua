@@ -62,16 +62,20 @@ function CONSOLE:keypress(key)
     return true
 end
 
+
 function CONSOLE:run_command()
     table.insert(self.old_commands, self.current_command)
     local f, err = load(self.current_command)
+    local print_error = function() if err then table.insert(self.old_commands, {color = {0.8, 0, 0}, text = err}) err = nil end end
     if err then
-        table.insert(self.old_commands, {color = {0.8, 0, 0}, text = err})
+        print_error(err)
     else
-        f = f()
+        f, err = pcall(f)
     end
-    if f ~= nil then
-        table.insert(self.old_commands, {color = {0, 0.8, 0}, text = f})
+    if f then
+        table.insert(self.old_commands, {color = {0, 0.8, 0}, text = err})
+    else
+        print_error(err)
     end
     self.current_command = ""
     while #self.old_commands > MAX_BUFFER do

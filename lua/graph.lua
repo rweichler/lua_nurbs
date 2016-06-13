@@ -21,7 +21,7 @@ local function dist(x, y, z)
 end
 
 
-GRAPH_RESOLUTION = 0.04
+GRAPH_RESOLUTION = 0.004
 
 local max_dist = 26
 function GRAPH:draw()
