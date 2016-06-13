@@ -1,3 +1,5 @@
+--functions for manipulating the points in the graph
+
 local DELTA = DELTA/4
 
 

@@ -1,3 +1,5 @@
+--functions for manipulating the camera position / angle
+
 local keyfuncs = {}
 local sinf = math.sin
 local cosf = math.cos

@@ -12,7 +12,7 @@ const unsigned int SCREEN_WIDTH = 1000;
 const unsigned int SCREEN_HEIGHT = 750;
 
 float camera_position[3] = {0, 0, 0};
-float camera_rotation[2] = {0, 0};
+float camera_rotation[2] = {0, 0}; //pitch and yaw only, no roll
 
 lua_State *L;
 int lua_display, lua_drag, lua_click, lua_keypress;

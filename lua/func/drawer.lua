@@ -1,4 +1,4 @@
-
+--makes drawing graphs easier
 return function(center_x, center_y, center_z)
     center_x = center_x or 0
     center_y = center_y or 0
