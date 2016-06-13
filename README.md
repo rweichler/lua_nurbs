@@ -12,7 +12,7 @@ This is a 3D wireframe NURBS editor for OS X written in Lua (and some C).
 * Xcode command line tools
 * LuaJIT (`brew install luajit`)
 
-This could easily be ported to Windows/Linux since this is just GLUT and OpenGL, but ¯\\_(ツ)\_/¯
+This could easily be ported to Windows/Linux since this is just GLUT and OpenGL, but ¯\\\_(ツ)\_/¯
 
 ### Building
 
