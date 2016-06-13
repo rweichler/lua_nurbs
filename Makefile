@@ -1,9 +1,12 @@
 CC=clang
-C_FILES=$(wildcard c/*.c)
-O_FILES=$(C_FILES:c/%.c=build/%.o)
+BUILD_DIR=build
 EXECUTABLE=a.out
 USR_LOCAL=/usr/local
 #USR_LOCAL=/Users/clmuser/Adobe/brew
+
+
+C_FILES=$(wildcard c/*.c)
+O_FILES=$(C_FILES:c/%.c=$(BUILD_DIR)/%.o)
 
 CFLAGS=-Wno-deprecated-declarations -I$(USR_LOCAL)/include/luajit-2.0 -Ic
 LD_FRAMEWORKS=-framework OpenGL -framework GLUT
@@ -15,14 +18,14 @@ LDFLAGS=-L$(USR_LOCAL)/lib $(LD_FRAMEWORKS) $(LD_LUAJIT)
 all: a.out
 clean:
 	rm -f $(O_FILES) $(EXECUTABLE)
-	rm -rf build
+	rm -rf $(BUILD_DIR)
 
 
 $(EXECUTABLE): $(O_FILES)
 	$(CC) $^ -o $@ $(LDFLAGS)
 
 build:
-	mkdir -p build
+	mkdir -p $(BUILD_DIR)
 
-build/%.o: c/%.c build
+$(BUILD_DIR)/%.o: c/%.c $(BUILD_DIR)
 	$(CC) -c $< $(CFLAGS) -o $@
