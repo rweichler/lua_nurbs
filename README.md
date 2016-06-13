@@ -24,11 +24,11 @@ This is a 3D wireframe NURBS editor for OS X written in Lua (and some C).
 
 ### Cycling through the modes
 
-Click the button in the top left corner of the screen. Or press `q`.
+Press `q`.
 
 ### Camera Mode
 
-This is on by default. Square should be green.
+This is on by default.
 
 So, the camera basically behaves like Doom, or any FPS really. Use `wasd` to move, use the arrow keys to look around.
 
@@ -36,9 +36,9 @@ Press `r` to move up, and `f` to move down.
 
 ### Point manipulation mode
 
-This is off by default. Square should be gray.
+This is off by default.
 
-All of the points should be highlighted white, and one of them should be highlighted green.
+All of the points should be highlighted white (instead of gray), and one of them should be highlighted green.
 
 Use `wasd` and `rf` to move the point around in 3D space. Use the arrow keys to change the highlighted point.
 
