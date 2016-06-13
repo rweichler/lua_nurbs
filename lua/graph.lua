@@ -13,7 +13,7 @@ function GRAPH:coords()
     end
 end
 
-GRAPH_RESOLUTION = 0.004
+GRAPH_RESOLUTION = 250
 
 local max_dist = 26
 function GRAPH:draw()
@@ -25,7 +25,7 @@ function GRAPH:draw()
     SET_COLOR(r, g, b)
 
     local moved = false
-    for t=0,1,GRAPH_RESOLUTION do
+    for t=0,1,1/GRAPH_RESOLUTION do
         local x, y, z = coords(t)
         if x and y and z then
             if not moved then
