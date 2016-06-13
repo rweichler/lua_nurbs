@@ -93,7 +93,9 @@ Then type this to refresh the grid:
 
 ## Changing the order
 
-Change the value for `grid.column_order` and `grid.row_order`.
+Change the value for `grid.column_order` and `grid.row_order`. I'd recommend setting them to 3 if you've never used something like this before.
+
+Afterward, do a `grid:eval()`.
 
 ## Knots
 
