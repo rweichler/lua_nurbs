@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
 
     setup_bspline(L);
 
-    luaL_loadfile(L, "ui.lua");
+    luaL_loadfile(L, "lua/init.lua");
     if(lua_isstring(L, -1)) {
         printf("%s\n", lua_tostring(L, -1));
         return 1;

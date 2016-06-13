@@ -1,5 +1,5 @@
 VIEW = require 'lua.view'
-local drawer = require 'func.drawer'
+local drawer = require 'lua.func.drawer'
 local move, draw = drawer()
 
 local GRAPH = VIEW()

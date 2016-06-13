@@ -275,7 +275,7 @@ function GRID:set_selected(x, y)
     end
 end
 
-local pt_keyfuncs = require 'func.point_keys'
+local pt_keyfuncs = require 'lua.func.point_keys'
 
 local keyfuncs = {}
 keyfuncs.up = function(self)

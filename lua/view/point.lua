@@ -45,7 +45,7 @@ function POINT:set_weight(weight)
     self[4] = weight
 end
 
-local drawer = require 'func.drawer'
+local drawer = require 'lua.func.drawer'
 
 function POINT:draw()
     local move, draw = drawer(self.x, self.y, self.z)
