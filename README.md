@@ -44,7 +44,7 @@ Use `wasd` and `rf` to move the point around in 3D space. Use the arrow keys to 
 
 # The Console
 
-This program heavily uses a lua console for manipulation. Press ~ (next to ESC and 1 on the keyboard) to open it. These are the commands you can type:
+This program heavily uses a Lua console for manipulation. Press ~ (next to ESC and 1 on the keyboard) to open it. These are the commands you can type:
 
 ## Finding values
 
