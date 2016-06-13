@@ -73,7 +73,8 @@ function CONSOLE:run_command()
         f, err = pcall(f)
     end
     if f then
-        table.insert(self.old_commands, {color = {0, 0.8, 0}, text = err})
+        local result = err
+        table.insert(self.old_commands, {color = {0, 0.8, 0}, text = result})
     else
         print_error(err)
     end
