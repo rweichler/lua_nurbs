@@ -7,6 +7,7 @@
 #include <lualib.h>
 #include <stdlib.h>
 #include "bspline.h"
+#include <stdbool.h>
 
 const unsigned int SCREEN_WIDTH = 1000;
 const unsigned int SCREEN_HEIGHT = 750;
@@ -130,12 +131,22 @@ void glut_drag(int x, int y)
     luacall(2);
 }
 
-void glut_keyboard(unsigned char key, int x, int y)
+void glut_keydown(unsigned char key, int x, int y)
 {
     lua_rawgeti(L, LUA_REGISTRYINDEX, lua_keypress);
     char str[2] = {key, '\0'};
     lua_pushstring(L, str);
-    luacall(1);
+    lua_pushboolean(L, true);
+    luacall(2);
+}
+
+void glut_keyup(unsigned char key, int x, int y)
+{
+    lua_rawgeti(L, LUA_REGISTRYINDEX, lua_keypress);
+    char str[2] = {key, '\0'};
+    lua_pushstring(L, str);
+    lua_pushboolean(L, false);
+    luacall(2);
 }
 
 #define MAP(GLUT, STR) \
@@ -177,7 +188,8 @@ int main(int argc, char *argv[])
     glutMouseFunc(glut_click);
     glutMotionFunc(glut_drag);
     glutPassiveMotionFunc(glut_hover);
-    glutKeyboardFunc(glut_keyboard);
+    glutKeyboardFunc(glut_keydown);
+    glutKeyboardUpFunc(glut_keyup);
     glutSpecialFunc(glut_special_keyboard);
 
     L = luaL_newstate();

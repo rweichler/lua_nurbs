@@ -15,7 +15,7 @@ LDFLAGS=-L$(USR_LOCAL)/lib $(LD_FRAMEWORKS) $(LD_LUAJIT)
 
 .PHONY: all clean
 
-all: a.out
+all: $(EXECUTABLE)
 clean:
 	rm -f $(O_FILES) $(EXECUTABLE)
 	rm -rf $(BUILD_DIR)
@@ -24,7 +24,7 @@ clean:
 $(EXECUTABLE): $(O_FILES)
 	$(CC) $^ -o $@ $(LDFLAGS)
 
-build:
+$(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
 $(BUILD_DIR)/%.o: c/%.c $(BUILD_DIR)

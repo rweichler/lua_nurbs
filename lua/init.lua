@@ -69,7 +69,9 @@ function drag(x, y)
 end
 
 local camera_keyfuncs = require 'lua.func.camera_keys'
-function keypress(key)
+function keypress(key, down)
+    if not down then return end
+
     if console:keypress(key) then
         REDISPLAY()
         return
