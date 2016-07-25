@@ -1,7 +1,4 @@
-#include <lua.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+#include "global.h"
 
 int l_bspline_setup(lua_State *L)
 {
@@ -121,7 +118,7 @@ int l_bspline_free(lua_State *L) {
     return 0;
 }
 
-void bspline_setup(lua_State *L)
+void bspline_bootstrap()
 {
     lua_pushcfunction(L, l_bspline_setup);
     lua_setglobal(L, "BSPLINE_SETUP");
