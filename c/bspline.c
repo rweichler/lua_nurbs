@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-int l_setup_bspline(lua_State *L)
+int l_bspline_setup(lua_State *L)
 {
     int n_pts = lua_tonumber(L, 1);
     int n_knots = lua_tonumber(L, 2);
@@ -41,7 +41,7 @@ int l_setup_bspline(lua_State *L)
     return 2;
 }
 
-int l_eval_bspline(lua_State *L)
+int l_bspline_eval(lua_State *L)
 {
     float *points = (float *)lua_touserdata(L, 1);
     float *knots = (float *)lua_touserdata(L, 2);
@@ -111,7 +111,7 @@ int l_eval_bspline(lua_State *L)
     return dim;
 }
 
-int l_free_bspline(lua_State *L) {
+int l_bspline_free(lua_State *L) {
     float *points = lua_touserdata(L, 1);
     float *knots = lua_touserdata(L, 2);
 
@@ -121,12 +121,12 @@ int l_free_bspline(lua_State *L) {
     return 0;
 }
 
-void setup_bspline(lua_State *L)
+void bspline_setup(lua_State *L)
 {
-    lua_pushcfunction(L, l_setup_bspline);
+    lua_pushcfunction(L, l_bspline_setup);
     lua_setglobal(L, "BSPLINE_SETUP");
-    lua_pushcfunction(L, l_eval_bspline);
+    lua_pushcfunction(L, l_bspline_eval);
     lua_setglobal(L, "BSPLINE_EVAL");
-    lua_pushcfunction(L, l_free_bspline);
+    lua_pushcfunction(L, l_bspline_free);
     lua_setglobal(L, "BSPLINE_FREE");
 }

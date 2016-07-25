@@ -70,6 +70,7 @@ end
 
 local camera_keyfuncs = require 'lua.func.camera_keys'
 function keypress(key, down)
+    print(key)
     if not down then return end
 
     if console:keypress(key) then
@@ -86,6 +87,7 @@ function keypress(key, down)
             REDISPLAY()
         end
     else 
+        print('ITS IN')
         local func = camera_keyfuncs[key]
         if func then
             func(grid.selected_point)

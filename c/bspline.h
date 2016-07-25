@@ -1,1 +1,1 @@
-void setup_bspline(lua_State *L);
+void bspline_setup(lua_State *L);

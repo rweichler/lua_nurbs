@@ -168,12 +168,12 @@ void glut_special_keyboard(int key, int x, int y)
     if(str == NULL) {
         //send the ugly raw key int
         lua_pushnumber(L, key);
-        luacall(1);
     } else {
         //send the nice pretty string
         lua_pushstring(L, str);
-        luacall(1);
     }
+    lua_pushboolean(L, true);
+    luacall(2);
 }
 
 int main(int argc, char *argv[])
@@ -201,7 +201,7 @@ int main(int argc, char *argv[])
     lua_pushnumber(L, SCREEN_HEIGHT);
     lua_setglobal(L, "SCREEN_HEIGHT");
 
-    setup_bspline(L);
+    bspline_setup(L);
 
     luaL_loadfile(L, "lua/init.lua");
     if(lua_isstring(L, -1)) {
